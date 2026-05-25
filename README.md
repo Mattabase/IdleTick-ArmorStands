@@ -40,6 +40,7 @@ All settings are stored in `config/lazystands.json` and can be edited in-game th
 | `dontSkipIfHasPassengers` | `true` | Don't skip if something is riding the stand |
 | `dontSkipIfOnFire` | `true` | Don't skip if the stand is on fire |
 | `dontSkipIfHurtMarked` | `true` | Don't skip if the stand has been knocked/pushed |
+| `dontSkipIfMoving` | `true` | Don't skip if the stand has horizontal velocity (e.g. sliding on ice) |
 
 ## Installation
 

@@ -4,6 +4,7 @@ import gay.themattabase.lazystands.config.LazyStandsConfig;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -38,7 +39,14 @@ public abstract class ArmorStandTickMixin {
         boolean grounded = (cfg.skipWhenOnGround && self.onGround())
                 || (cfg.skipWhenNoGravity && self.isNoGravity());
 
-        boolean blocked = (cfg.dontSkipIfPassenger && self.isPassenger())
+        boolean moving = false;
+        if (cfg.dontSkipIfMoving) {
+            Vec3 vel = self.getDeltaMovement();
+            moving = vel.x * vel.x + vel.z * vel.z > 1.0E-6;
+        }
+
+        boolean blocked = moving
+                || (cfg.dontSkipIfPassenger && self.isPassenger())
                 || (cfg.dontSkipIfHasPassengers && !self.getPassengers().isEmpty())
                 || (cfg.dontSkipIfOnFire && self.isOnFire())
                 || (cfg.dontSkipIfHurtMarked && self.hurtMarked);

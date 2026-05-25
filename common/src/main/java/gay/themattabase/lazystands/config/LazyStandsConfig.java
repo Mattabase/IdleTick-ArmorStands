@@ -24,6 +24,7 @@ public class LazyStandsConfig {
     public boolean dontSkipIfHasPassengers = true;
     public boolean dontSkipIfOnFire = true;
     public boolean dontSkipIfHurtMarked = true;
+    public boolean dontSkipIfMoving = true;
 
     // How many ticks between full ticks (2-100, default 20 = skip 19/20)
     public int skipInterval = 20;

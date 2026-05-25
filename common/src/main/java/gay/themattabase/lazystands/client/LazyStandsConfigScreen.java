@@ -50,6 +50,10 @@ public class LazyStandsConfigScreen extends Screen {
                 .create(0, 0, 200, 20, Component.literal("Don't Skip If Hurt Marked"),
                         (btn, val) -> cfg.dontSkipIfHurtMarked = val));
 
+        layout.addChild(CycleButton.onOffBuilder(cfg.dontSkipIfMoving)
+                .create(0, 0, 200, 20, Component.literal("Don't Skip If Moving"),
+                        (btn, val) -> cfg.dontSkipIfMoving = val));
+
         layout.addChild(Button.builder(
                 Component.literal("Skip Interval: " + cfg.skipInterval + " ticks"),
                 btn -> {
