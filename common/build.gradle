@@ -10,6 +10,7 @@ neoForge {
 dependencies {
     compileOnly group: 'org.spongepowered', name: 'mixin', version: '0.8.5'
     annotationProcessor group: 'org.spongepowered', name: 'mixin', version: '0.8.5', classifier: 'processor'
+    compileOnly "net.creeperhost.polylib:polylib-neoforge:${polylib_version}"
 }
 
 configurations {

@@ -13,6 +13,12 @@ neoForge {
         server {
             server()
         }
+        data {
+            clientData()
+            programArguments.addAll '--mod', mod_id, '--all',
+                    '--output', file('src/main/generated').absolutePath,
+                    '--existing', file('src/main/resources').absolutePath
+        }
     }
 
     mods {
@@ -22,8 +28,13 @@ neoForge {
     }
 }
 
+dependencies {
+    implementation "net.creeperhost.polylib:polylib-neoforge:${polylib_version}"
+}
+
 sourceSets.main.resources {
     srcDir 'src/main/resources'
+    srcDir 'src/main/generated'
     srcDir project(':common').sourceSets.main.resources
 }
 

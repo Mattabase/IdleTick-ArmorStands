@@ -10,19 +10,26 @@ license="${license}"
     displayTest="IGNORE_SERVER_VERSION"
     description="""${description}"""
 
-[[dependencies.lazystands]]
+[[dependencies.idletick_armor_stands]]
     modId="neoforge"
     type="required"
     versionRange="${neoforge_loader_version_range}"
     ordering="NONE"
     side="BOTH"
 
-[[dependencies.lazystands]]
+[[dependencies.idletick_armor_stands]]
     modId="minecraft"
     type="required"
     versionRange="${minecraft_version_range}"
     ordering="NONE"
     side="BOTH"
 
+[[dependencies.idletick_armor_stands]]
+    modId="polylib"
+    type="required"
+    versionRange="[2.0.6,)"
+    ordering="NONE"
+    side="BOTH"
+
 [[mixins]]
-config = "lazystands.mixins.json"
+config = "idletick_armor_stands.mixins.json"

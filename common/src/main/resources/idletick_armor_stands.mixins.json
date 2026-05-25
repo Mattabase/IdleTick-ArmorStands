@@ -1,6 +1,6 @@
 {
   "required": true,
-  "package": "gay.themattabase.lazystands.mixin",
+  "package": "gay.themattabase.idletickarmorstands.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
     "ArmorStandTickMixin"

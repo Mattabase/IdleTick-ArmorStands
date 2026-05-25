@@ -1,9 +1,12 @@
-package gay.themattabase.lazystands.mixin;
+package gay.themattabase.idletickarmorstands.mixin;
 
-import gay.themattabase.lazystands.config.LazyStandsConfig;
+import gay.themattabase.idletickarmorstands.IdleTickArmorStandsGameRules;
+import gay.themattabase.idletickarmorstands.config.IdleTickArmorStandsConfig;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.gamerules.GameRules;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -11,30 +14,34 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-/**
- * Skips most ticks for stationary armor stands based on config.
- *
- * <p>Stands that are on the ground or have NoGravity set skip ticks.
- * Stands actively falling (not on ground, has gravity) always run
- * every tick so they land normally.</p>
- *
- * <p>Targets {@link LivingEntity#tick()} because {@link ArmorStand}
- * does not override {@code tick()} in MC 26.1.2.</p>
- */
 @Mixin(LivingEntity.class)
 public abstract class ArmorStandTickMixin {
 
     @Unique
-    private int lazyStands$skipCounter = 0;
+    private int idleTick$skipCounter = 0;
 
     @Inject(method = "tick", at = @At("HEAD"), cancellable = true, remap = false)
-    private void lazyStands$skipStationaryArmorStandTick(CallbackInfo ci) {
+    private void idleTick$skipStationaryArmorStandTick(CallbackInfo ci) {
         Entity self = (Entity) (Object) this;
 
         if (!(self instanceof ArmorStand) || self.level().isClientSide()) return;
 
-        LazyStandsConfig cfg = LazyStandsConfig.get();
-        if (!cfg.enabled) return;
+        boolean enabled;
+        int skipInterval;
+        if (IdleTickArmorStandsGameRules.ENABLED != null) {
+            ServerLevel serverLevel = (ServerLevel) self.level();
+            GameRules rules = serverLevel.getGameRules();
+            enabled = rules.get(IdleTickArmorStandsGameRules.ENABLED.get());
+            skipInterval = rules.get(IdleTickArmorStandsGameRules.SKIP_INTERVAL.get());
+        } else {
+            IdleTickArmorStandsConfig cfg = IdleTickArmorStandsConfig.get();
+            enabled = cfg.enabled;
+            skipInterval = cfg.skipInterval;
+        }
+
+        if (!enabled) return;
+
+        IdleTickArmorStandsConfig cfg = IdleTickArmorStandsConfig.get();
 
         boolean grounded = (cfg.skipWhenOnGround && self.onGround())
                 || (cfg.skipWhenNoGravity && self.isNoGravity());
@@ -54,14 +61,14 @@ public abstract class ArmorStandTickMixin {
         boolean canSkip = grounded && !blocked;
 
         if (canSkip) {
-            if (++lazyStands$skipCounter < cfg.skipInterval) {
+            if (++idleTick$skipCounter < skipInterval) {
                 self.tickCount++;
                 ci.cancel();
                 return;
             }
-            lazyStands$skipCounter = 0;
+            idleTick$skipCounter = 0;
         } else {
-            lazyStands$skipCounter = 0;
+            idleTick$skipCounter = 0;
         }
     }
 }

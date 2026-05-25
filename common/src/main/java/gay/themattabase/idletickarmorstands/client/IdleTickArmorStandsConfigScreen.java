@@ -1,6 +1,6 @@
-package gay.themattabase.lazystands.client;
+package gay.themattabase.idletickarmorstands.client;
 
-import gay.themattabase.lazystands.config.LazyStandsConfig;
+import gay.themattabase.idletickarmorstands.config.IdleTickArmorStandsConfig;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.CycleButton;
 import net.minecraft.client.gui.layouts.LinearLayout;
@@ -8,50 +8,50 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 
-public class LazyStandsConfigScreen extends Screen {
+public class IdleTickArmorStandsConfigScreen extends Screen {
 
     private final Screen parent;
 
-    public LazyStandsConfigScreen(Screen parent) {
-        super(Component.literal("LazyStands Configuration"));
+    public IdleTickArmorStandsConfigScreen(Screen parent) {
+        super(Component.translatable("idletick_armor_stands.config.title"));
         this.parent = parent;
     }
 
     @Override
     protected void init() {
-        LazyStandsConfig cfg = LazyStandsConfig.get();
+        IdleTickArmorStandsConfig cfg = IdleTickArmorStandsConfig.get();
         LinearLayout layout = LinearLayout.vertical().spacing(2);
 
         layout.addChild(CycleButton.onOffBuilder(cfg.enabled)
-                .create(0, 0, 200, 20, Component.literal("LazyStands Enabled"),
+                .create(0, 0, 200, 20, Component.translatable("idletick_armor_stands.config.enabled"),
                         (btn, val) -> cfg.enabled = val));
 
         layout.addChild(CycleButton.onOffBuilder(cfg.skipWhenOnGround)
-                .create(0, 0, 200, 20, Component.literal("Skip When On Ground"),
+                .create(0, 0, 200, 20, Component.translatable("idletick_armor_stands.config.skip_when_on_ground"),
                         (btn, val) -> cfg.skipWhenOnGround = val));
 
         layout.addChild(CycleButton.onOffBuilder(cfg.skipWhenNoGravity)
-                .create(0, 0, 200, 20, Component.literal("Skip When NoGravity"),
+                .create(0, 0, 200, 20, Component.translatable("idletick_armor_stands.config.skip_when_no_gravity"),
                         (btn, val) -> cfg.skipWhenNoGravity = val));
 
         layout.addChild(CycleButton.onOffBuilder(cfg.dontSkipIfPassenger)
-                .create(0, 0, 200, 20, Component.literal("Don't Skip If Passenger"),
+                .create(0, 0, 200, 20, Component.translatable("idletick_armor_stands.config.dont_skip_if_passenger"),
                         (btn, val) -> cfg.dontSkipIfPassenger = val));
 
         layout.addChild(CycleButton.onOffBuilder(cfg.dontSkipIfHasPassengers)
-                .create(0, 0, 200, 20, Component.literal("Don't Skip If Has Riders"),
+                .create(0, 0, 200, 20, Component.translatable("idletick_armor_stands.config.dont_skip_if_has_passengers"),
                         (btn, val) -> cfg.dontSkipIfHasPassengers = val));
 
         layout.addChild(CycleButton.onOffBuilder(cfg.dontSkipIfOnFire)
-                .create(0, 0, 200, 20, Component.literal("Don't Skip If On Fire"),
+                .create(0, 0, 200, 20, Component.translatable("idletick_armor_stands.config.dont_skip_if_on_fire"),
                         (btn, val) -> cfg.dontSkipIfOnFire = val));
 
         layout.addChild(CycleButton.onOffBuilder(cfg.dontSkipIfHurtMarked)
-                .create(0, 0, 200, 20, Component.literal("Don't Skip If Hurt Marked"),
+                .create(0, 0, 200, 20, Component.translatable("idletick_armor_stands.config.dont_skip_if_hurt_marked"),
                         (btn, val) -> cfg.dontSkipIfHurtMarked = val));
 
         layout.addChild(CycleButton.onOffBuilder(cfg.dontSkipIfMoving)
-                .create(0, 0, 200, 20, Component.literal("Don't Skip If Moving"),
+                .create(0, 0, 200, 20, Component.translatable("idletick_armor_stands.config.dont_skip_if_moving"),
                         (btn, val) -> cfg.dontSkipIfMoving = val));
 
         layout.addChild(Button.builder(
@@ -71,7 +71,7 @@ public class LazyStandsConfigScreen extends Screen {
 
     @Override
     public void onClose() {
-        LazyStandsConfig.save();
+        IdleTickArmorStandsConfig.save();
         this.minecraft.setScreen(this.parent);
     }
 

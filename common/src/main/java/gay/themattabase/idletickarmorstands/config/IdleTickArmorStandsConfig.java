@@ -1,4 +1,4 @@
-package gay.themattabase.lazystands.config;
+package gay.themattabase.idletickarmorstands.config;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -7,45 +7,41 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-public class LazyStandsConfig {
+public class IdleTickArmorStandsConfig {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
-    private static LazyStandsConfig INSTANCE = new LazyStandsConfig();
+    private static IdleTickArmorStandsConfig INSTANCE = new IdleTickArmorStandsConfig();
     private static Path configPath;
 
-    // Master switch
     public boolean enabled = true;
 
-    // Conditions that ALLOW skipping (stand must meet at least one)
     public boolean skipWhenOnGround = true;
     public boolean skipWhenNoGravity = true;
 
-    // Conditions that PREVENT skipping (if true, these checks are active)
     public boolean dontSkipIfPassenger = true;
     public boolean dontSkipIfHasPassengers = true;
     public boolean dontSkipIfOnFire = true;
     public boolean dontSkipIfHurtMarked = true;
     public boolean dontSkipIfMoving = true;
 
-    // How many ticks between full ticks (2-100, default 20 = skip 19/20)
     public int skipInterval = 20;
 
-    public static LazyStandsConfig get() {
+    public static IdleTickArmorStandsConfig get() {
         return INSTANCE;
     }
 
     public static void load(Path configDir) {
-        configPath = configDir.resolve("lazystands.json");
+        configPath = configDir.resolve("idletick_armor_stands.json");
         if (Files.exists(configPath)) {
             try {
                 String json = Files.readString(configPath);
-                INSTANCE = GSON.fromJson(json, LazyStandsConfig.class);
-                if (INSTANCE == null) INSTANCE = new LazyStandsConfig();
+                INSTANCE = GSON.fromJson(json, IdleTickArmorStandsConfig.class);
+                if (INSTANCE == null) INSTANCE = new IdleTickArmorStandsConfig();
                 INSTANCE.clampValues();
             } catch (IOException e) {
-                INSTANCE = new LazyStandsConfig();
+                INSTANCE = new IdleTickArmorStandsConfig();
             }
         } else {
-            INSTANCE = new LazyStandsConfig();
+            INSTANCE = new IdleTickArmorStandsConfig();
             save();
         }
     }
