@@ -1,0 +1,46 @@
+plugins {
+    id 'multiloader-loader'
+    id 'net.neoforged.moddev'
+}
+
+neoForge {
+    version = neoforge_version
+
+    runs {
+        client {
+            client()
+        }
+        server {
+            server()
+        }
+    }
+
+    mods {
+        "${mod_id}" {
+            sourceSet sourceSets.main
+        }
+    }
+}
+
+sourceSets.main.resources {
+    srcDir 'src/main/resources'
+    srcDir project(':common').sourceSets.main.resources
+}
+
+tasks.withType(AbstractCopyTask).configureEach {
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
+}
+
+// NeoForge moddev registers build/classes/java/main as the FML mod root, but
+// processResources puts mixin JSON files in build/resources/main. Mixin fails to
+// find them unless they're also in the classes directory.
+tasks.named('classes') {
+    doLast {
+        copy {
+            from('src/main/resources') {
+                include '*.mixins.json'
+            }
+            into layout.buildDirectory.dir("classes/java/main")
+        }
+    }
+}
