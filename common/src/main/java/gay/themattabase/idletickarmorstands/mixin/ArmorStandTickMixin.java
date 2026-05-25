@@ -20,6 +20,20 @@ public abstract class ArmorStandTickMixin {
     @Unique
     private int idleTick$skipCounter = 0;
 
+    @Unique
+    private boolean isFeatureActive(boolean configVal, java.util.function.Supplier<net.minecraft.world.level.gamerules.GameRule<Boolean>> ruleSupplier, GameRules rules) {
+        if (!configVal) return false;
+        if (ruleSupplier == null) return true;
+        return rules.get(ruleSupplier.get());
+    }
+
+    @Unique
+    private boolean isSafetyCheckActive(boolean configVal, java.util.function.Supplier<net.minecraft.world.level.gamerules.GameRule<Boolean>> ruleSupplier, GameRules rules) {
+        if (configVal) return true;
+        if (ruleSupplier == null) return false;
+        return rules.get(ruleSupplier.get());
+    }
+
     @Inject(method = "tick", at = @At("HEAD"), cancellable = true, remap = false)
     private void idleTick$skipStationaryArmorStandTick(CallbackInfo ci) {
         Entity self = (Entity) (Object) this;
@@ -30,19 +44,19 @@ public abstract class ArmorStandTickMixin {
         ServerLevel level = (ServerLevel) self.level();
         GameRules rules = level.getGameRules();
 
-        if (!cfg.enabled || (IdleTickArmorStandsGameRules.ENABLED != null && !rules.get(IdleTickArmorStandsGameRules.ENABLED.get()))) {
+        if (!isFeatureActive(cfg.enabled, IdleTickArmorStandsGameRules.ENABLED, rules)) {
             return;
         }
 
-        boolean grounded = (cfg.skipWhenOnGround && (IdleTickArmorStandsGameRules.SKIP_WHEN_ON_GROUND == null || rules.get(IdleTickArmorStandsGameRules.SKIP_WHEN_ON_GROUND.get()))) && self.onGround()
-                || (cfg.skipWhenNoGravity && (IdleTickArmorStandsGameRules.SKIP_WHEN_NO_GRAVITY == null || rules.get(IdleTickArmorStandsGameRules.SKIP_WHEN_NO_GRAVITY.get()))) && self.isNoGravity();
+        boolean grounded = (isFeatureActive(cfg.skipWhenOnGround, IdleTickArmorStandsGameRules.SKIP_WHEN_ON_GROUND, rules) && self.onGround())
+                || (isFeatureActive(cfg.skipWhenNoGravity, IdleTickArmorStandsGameRules.SKIP_WHEN_NO_GRAVITY, rules) && self.isNoGravity());
 
         if (!grounded) {
             idleTick$skipCounter = 0;
             return;
         }
 
-        if (cfg.dontSkipIfMoving || (IdleTickArmorStandsGameRules.DONT_SKIP_IF_MOVING != null && rules.get(IdleTickArmorStandsGameRules.DONT_SKIP_IF_MOVING.get()))) {
+        if (isSafetyCheckActive(cfg.dontSkipIfMoving, IdleTickArmorStandsGameRules.DONT_SKIP_IF_MOVING, rules)) {
             Vec3 vel = self.getDeltaMovement();
             if (vel.x * vel.x + vel.z * vel.z > 1.0E-6) {
                 idleTick$skipCounter = 0;
@@ -50,22 +64,22 @@ public abstract class ArmorStandTickMixin {
             }
         }
 
-        if ((cfg.dontSkipIfPassenger || (IdleTickArmorStandsGameRules.DONT_SKIP_IF_PASSENGER != null && rules.get(IdleTickArmorStandsGameRules.DONT_SKIP_IF_PASSENGER.get()))) && self.isPassenger()) {
+        if (isSafetyCheckActive(cfg.dontSkipIfPassenger, IdleTickArmorStandsGameRules.DONT_SKIP_IF_PASSENGER, rules) && self.isPassenger()) {
             idleTick$skipCounter = 0;
             return;
         }
 
-        if ((cfg.dontSkipIfHasPassengers || (IdleTickArmorStandsGameRules.DONT_SKIP_IF_HAS_PASSENGERS != null && rules.get(IdleTickArmorStandsGameRules.DONT_SKIP_IF_HAS_PASSENGERS.get()))) && !self.getPassengers().isEmpty()) {
+        if (isSafetyCheckActive(cfg.dontSkipIfHasPassengers, IdleTickArmorStandsGameRules.DONT_SKIP_IF_HAS_PASSENGERS, rules) && !self.getPassengers().isEmpty()) {
             idleTick$skipCounter = 0;
             return;
         }
 
-        if ((cfg.dontSkipIfOnFire || (IdleTickArmorStandsGameRules.DONT_SKIP_IF_ON_FIRE != null && rules.get(IdleTickArmorStandsGameRules.DONT_SKIP_IF_ON_FIRE.get()))) && self.isOnFire()) {
+        if (isSafetyCheckActive(cfg.dontSkipIfOnFire, IdleTickArmorStandsGameRules.DONT_SKIP_IF_ON_FIRE, rules) && self.isOnFire()) {
             idleTick$skipCounter = 0;
             return;
         }
 
-        if ((cfg.dontSkipIfHurtMarked || (IdleTickArmorStandsGameRules.DONT_SKIP_IF_HURT_MARKED != null && rules.get(IdleTickArmorStandsGameRules.DONT_SKIP_IF_HURT_MARKED.get()))) && self.hurtMarked) {
+        if (isSafetyCheckActive(cfg.dontSkipIfHurtMarked, IdleTickArmorStandsGameRules.DONT_SKIP_IF_HURT_MARKED, rules) && self.hurtMarked) {
             idleTick$skipCounter = 0;
             return;
         }
