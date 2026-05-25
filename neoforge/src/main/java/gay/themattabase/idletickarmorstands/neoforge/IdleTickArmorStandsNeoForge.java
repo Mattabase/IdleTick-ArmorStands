@@ -2,7 +2,6 @@ package gay.themattabase.idletickarmorstands.neoforge;
 
 import gay.themattabase.idletickarmorstands.IdleTickArmorStands;
 import gay.themattabase.idletickarmorstands.IdleTickArmorStandsGameRules;
-import gay.themattabase.idletickarmorstands.client.IdleTickArmorStandsConfigScreen;
 import gay.themattabase.idletickarmorstands.config.IdleTickArmorStandsConfig;
 import gay.themattabase.idletickarmorstands.neoforge.datagen.DataGenHandler;
 import net.minecraft.core.registries.Registries;
@@ -12,7 +11,6 @@ import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.fml.loading.FMLPaths;
-import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.util.function.Supplier;
@@ -62,8 +60,7 @@ public class IdleTickArmorStandsNeoForge {
         eventBus.addListener(DataGenHandler::gatherData);
 
         if (FMLLoader.getCurrent().getDist().isClient()) {
-            container.registerExtensionPoint(IConfigScreenFactory.class,
-                    (mc, parent) -> new IdleTickArmorStandsConfigScreen(parent));
+            ClientSetup.init(container);
         }
     }
 }
