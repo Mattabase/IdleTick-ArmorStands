@@ -15,6 +15,15 @@ public final class IdleTickArmorStandsGameRules {
 
     public static Supplier<GameRule<Boolean>> ENABLED;
 
+    public static Supplier<GameRule<Boolean>> SKIP_WHEN_ON_GROUND;
+    public static Supplier<GameRule<Boolean>> SKIP_WHEN_NO_GRAVITY;
+
+    public static Supplier<GameRule<Boolean>> DONT_SKIP_IF_PASSENGER;
+    public static Supplier<GameRule<Boolean>> DONT_SKIP_IF_HAS_PASSENGERS;
+    public static Supplier<GameRule<Boolean>> DONT_SKIP_IF_ON_FIRE;
+    public static Supplier<GameRule<Boolean>> DONT_SKIP_IF_HURT_MARKED;
+    public static Supplier<GameRule<Boolean>> DONT_SKIP_IF_MOVING;
+
     public static Supplier<GameRule<Integer>> SKIP_INTERVAL;
 
     private IdleTickArmorStandsGameRules() {}

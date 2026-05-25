@@ -26,37 +26,57 @@ public abstract class ArmorStandTickMixin {
 
         if (!(self instanceof ArmorStand) || self.level().isClientSide()) return;
 
-        boolean enabled;
-        int skipInterval;
+        IdleTickArmorStandsConfig cfg = IdleTickArmorStandsConfig.get();
+        
+        boolean enabled = cfg.enabled;
+        boolean skipWhenOnGround = cfg.skipWhenOnGround;
+        boolean skipWhenNoGravity = cfg.skipWhenNoGravity;
+        boolean dontSkipIfPassenger = cfg.dontSkipIfPassenger;
+        boolean dontSkipIfHasPassengers = cfg.dontSkipIfHasPassengers;
+        boolean dontSkipIfOnFire = cfg.dontSkipIfOnFire;
+        boolean dontSkipIfHurtMarked = cfg.dontSkipIfHurtMarked;
+        boolean dontSkipIfMoving = cfg.dontSkipIfMoving;
+        int skipInterval = cfg.skipInterval;
+
         if (IdleTickArmorStandsGameRules.ENABLED != null) {
             ServerLevel serverLevel = (ServerLevel) self.level();
             GameRules rules = serverLevel.getGameRules();
-            enabled = rules.get(IdleTickArmorStandsGameRules.ENABLED.get());
-            skipInterval = rules.get(IdleTickArmorStandsGameRules.SKIP_INTERVAL.get());
-        } else {
-            IdleTickArmorStandsConfig cfg = IdleTickArmorStandsConfig.get();
-            enabled = cfg.enabled;
-            skipInterval = cfg.skipInterval;
+            
+            // For features to be active, BOTH config and gamerule must allow it
+            enabled = enabled && rules.get(IdleTickArmorStandsGameRules.ENABLED.get());
+            skipWhenOnGround = skipWhenOnGround && rules.get(IdleTickArmorStandsGameRules.SKIP_WHEN_ON_GROUND.get());
+            skipWhenNoGravity = skipWhenNoGravity && rules.get(IdleTickArmorStandsGameRules.SKIP_WHEN_NO_GRAVITY.get());
+            
+            // For safety checks, if EITHER config or gamerule requires it, we enforce it
+            dontSkipIfPassenger = dontSkipIfPassenger || rules.get(IdleTickArmorStandsGameRules.DONT_SKIP_IF_PASSENGER.get());
+            dontSkipIfHasPassengers = dontSkipIfHasPassengers || rules.get(IdleTickArmorStandsGameRules.DONT_SKIP_IF_HAS_PASSENGERS.get());
+            dontSkipIfOnFire = dontSkipIfOnFire || rules.get(IdleTickArmorStandsGameRules.DONT_SKIP_IF_ON_FIRE.get());
+            dontSkipIfHurtMarked = dontSkipIfHurtMarked || rules.get(IdleTickArmorStandsGameRules.DONT_SKIP_IF_HURT_MARKED.get());
+            dontSkipIfMoving = dontSkipIfMoving || rules.get(IdleTickArmorStandsGameRules.DONT_SKIP_IF_MOVING.get());
+            
+            // For interval, gamerule overrides config if it's valid
+            int ruleInterval = rules.get(IdleTickArmorStandsGameRules.SKIP_INTERVAL.get());
+            if (ruleInterval >= 2) {
+                skipInterval = ruleInterval;
+            }
         }
 
         if (!enabled) return;
 
-        IdleTickArmorStandsConfig cfg = IdleTickArmorStandsConfig.get();
-
-        boolean grounded = (cfg.skipWhenOnGround && self.onGround())
-                || (cfg.skipWhenNoGravity && self.isNoGravity());
+        boolean grounded = (skipWhenOnGround && self.onGround())
+                || (skipWhenNoGravity && self.isNoGravity());
 
         boolean moving = false;
-        if (cfg.dontSkipIfMoving) {
+        if (dontSkipIfMoving) {
             Vec3 vel = self.getDeltaMovement();
             moving = vel.x * vel.x + vel.z * vel.z > 1.0E-6;
         }
 
         boolean blocked = moving
-                || (cfg.dontSkipIfPassenger && self.isPassenger())
-                || (cfg.dontSkipIfHasPassengers && !self.getPassengers().isEmpty())
-                || (cfg.dontSkipIfOnFire && self.isOnFire())
-                || (cfg.dontSkipIfHurtMarked && self.hurtMarked);
+                || (dontSkipIfPassenger && self.isPassenger())
+                || (dontSkipIfHasPassengers && !self.getPassengers().isEmpty())
+                || (dontSkipIfOnFire && self.isOnFire())
+                || (dontSkipIfHurtMarked && self.hurtMarked);
 
         boolean canSkip = grounded && !blocked;
 

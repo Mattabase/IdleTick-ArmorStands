@@ -26,6 +26,20 @@ public class IdleTickArmorStandsNeoForge {
     static {
         IdleTickArmorStandsGameRules.ENABLED = reg("enabled",
                 () -> IdleTickArmorStandsGameRules.createBool(true));
+        IdleTickArmorStandsGameRules.SKIP_WHEN_ON_GROUND = reg("skip_when_on_ground",
+                () -> IdleTickArmorStandsGameRules.createBool(true));
+        IdleTickArmorStandsGameRules.SKIP_WHEN_NO_GRAVITY = reg("skip_when_no_gravity",
+                () -> IdleTickArmorStandsGameRules.createBool(true));
+        IdleTickArmorStandsGameRules.DONT_SKIP_IF_PASSENGER = reg("dont_skip_if_passenger",
+                () -> IdleTickArmorStandsGameRules.createBool(true));
+        IdleTickArmorStandsGameRules.DONT_SKIP_IF_HAS_PASSENGERS = reg("dont_skip_if_has_passengers",
+                () -> IdleTickArmorStandsGameRules.createBool(true));
+        IdleTickArmorStandsGameRules.DONT_SKIP_IF_ON_FIRE = reg("dont_skip_if_on_fire",
+                () -> IdleTickArmorStandsGameRules.createBool(true));
+        IdleTickArmorStandsGameRules.DONT_SKIP_IF_HURT_MARKED = reg("dont_skip_if_hurt_marked",
+                () -> IdleTickArmorStandsGameRules.createBool(true));
+        IdleTickArmorStandsGameRules.DONT_SKIP_IF_MOVING = reg("dont_skip_if_moving",
+                () -> IdleTickArmorStandsGameRules.createBool(true));
         IdleTickArmorStandsGameRules.SKIP_INTERVAL = regInt("skip_interval",
                 () -> IdleTickArmorStandsGameRules.createInt(20, 2, 100));
     }

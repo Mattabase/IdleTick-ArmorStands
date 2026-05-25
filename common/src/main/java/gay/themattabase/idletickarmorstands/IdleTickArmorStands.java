@@ -46,6 +46,13 @@ public final class IdleTickArmorStands {
                 "Full-tick every Nth tick (2–100). Lower = more responsive, higher = more savings.");
 
         contribute("gamerule.idletick_armor_stands.enabled", "Enable armor stand tick optimisation");
+        contribute("gamerule.idletick_armor_stands.skip_when_on_ground", "Skip When On Ground");
+        contribute("gamerule.idletick_armor_stands.skip_when_no_gravity", "Skip When NoGravity");
+        contribute("gamerule.idletick_armor_stands.dont_skip_if_passenger", "Don't Skip If Passenger");
+        contribute("gamerule.idletick_armor_stands.dont_skip_if_has_passengers", "Don't Skip If Has Riders");
+        contribute("gamerule.idletick_armor_stands.dont_skip_if_on_fire", "Don't Skip If On Fire");
+        contribute("gamerule.idletick_armor_stands.dont_skip_if_hurt_marked", "Don't Skip If Hurt Marked");
+        contribute("gamerule.idletick_armor_stands.dont_skip_if_moving", "Don't Skip If Moving");
         contribute("gamerule.idletick_armor_stands.skip_interval", "Ticks between full armor stand ticks (2–100)");
     }
 
