@@ -48,6 +48,10 @@ All settings are stored in `config/lazystands.json` and can be edited in-game th
 2. Drop the jar into your `mods` folder
 3. That's it — no dependencies, no setup
 
+---
+
+[![CreeperHost Partner](docs/gigabit101-ch.jpg)](https://www.creeperhost.net/partner/arkantik222)
+
 On Fabric, [ModMenu](https://modrinth.com/mod/modmenu) is optional but recommended for in-game config access.
 
 ## FAQ
